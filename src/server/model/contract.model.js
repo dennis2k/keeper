@@ -1,3 +1,5 @@
+'use strict'
+
 const mongoose = require('mongoose')
 
 var model = mongoose.model('contract', new mongoose.Schema({

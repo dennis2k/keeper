@@ -21,4 +21,4 @@ export class ContractDetails {
     activate() {
         this.contract = new ContractModel();
     }
-}   
+}

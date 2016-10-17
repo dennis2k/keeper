@@ -1,10 +1,14 @@
 'use strict'
 
 const mongoose = require('mongoose')
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
 var bcrypt = require('bcryptjs');
 var Promise = require('bluebird');
+var account = require('./account.model').model;
 
-var userSchema = new mongoose.Schema({
+var userSchema = new Schema({
+    accountId: { type: ObjectId, required: true, ref: 'account' },
     email: { type: String, lowercase: true },
     password: { type: String, select: false },
     displayName: String,
@@ -18,7 +22,7 @@ var userSchema = new mongoose.Schema({
     yahoo: String,
     twitter: String
 })
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
     var user = this;
     if (!user.isModified('password')) {
         return next();
@@ -33,15 +37,21 @@ userSchema.pre('save', function(next) {
 
 userSchema.methods.comparePassword = (password, currentPassword) => {
     return new Promise((resolve, reject) => {
-            bcrypt.compare(password, currentPassword, (err, isMatch) => {
-                (err) ? reject(err) : resolve(isMatch)
+        bcrypt.compare(password, currentPassword, (err, isMatch) => {
+            (err) ? reject(err) : resolve(isMatch)
         });
     });
 };
 
-var model = mongoose.model('user',userSchema);
+var model = mongoose.model('user', userSchema);
 var options = {
-    onError: function (err, req, res, next) {
+    preCreate: (req, res, next) => {
+        account.create({}, (err, acc) => {
+            req.body.accountId = acc._id;
+            next();
+        })
+    },
+    onError: (err, req, res, next) => {
         const statusCode = req.erm.statusCode // 400 or 404
         res.status(statusCode).json({
             message: err.message

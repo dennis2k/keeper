@@ -3,6 +3,8 @@ var request = require('request');
 var util = require('./../util');
 var config = require('./../config');
 var user = require('./../model/user.model').model;
+var account = require('./../model/account.model').model;
+
 
 exports.authenticate = (req, res) => {
     var accessTokenUrl = config.FACEBOOK_TOKEN_URL;
@@ -26,24 +28,28 @@ exports.authenticate = (req, res) => {
                 return util.handleError(err, res, "Error auth with facebook " + err)
             }
             user.findOne({ facebook: profile.id }, (err, existingUser) => {
-                if (err) 
-                    return util.handleError(err, res, "Error finding user " + err)                
-                if (existingUser) 
+                if (err)
+                    return util.handleError(err, res, "Error finding user " + err)
+                if (existingUser)
                     return res.send({ user: existingUser, token: util.tokenize(existingUser) });
 
-                let newUser = new user();
-                newUser.facebook = profile.id;
-                newUser.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
-                newUser.displayName = profile.name;
-                newUser.save((err) => {
-                    if (err) {
-                        return util.handleError(err, res, "Error saving user" + err)
-                    }
-                    let token = util.tokenize(newUser);
-                    res.send({ user: newUser, token: token });
-                });
+                account.create({}, (err, acc) => {
+                    if (err)
+                        return util.handleError(err, res, "Error creating account" + err)
+                    let newUser = new user();
+                    newUser.accountId = acc._id;
+                    newUser.facebook = profile.id;
+                    newUser.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+                    newUser.displayName = profile.name;
+                    newUser.save((err) => {
+                        if (err) {
+                            return util.handleError(err, res, "Error saving user" + err)
+                        }
+                        let token = util.tokenize(newUser);
+                        res.send({ user: newUser, token: token });
+                    });
+                })
             });
-
         });
     });
 }

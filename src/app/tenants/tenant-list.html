@@ -1,0 +1,84 @@
+<template>
+    <!-- Create new  -->
+	<div>
+        <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+            <a 
+                md-button="floating: true; large: true;"
+                md-waves="color: light; circle: true;"
+                md-modal-trigger
+                href="#tenant">
+            
+                <i class="large material-icons">add</i>
+            </a>
+        </div>
+		<div id="tenant" class="modal" >
+			<div class="modal-content">
+				<h4>Add/edit tenant</h4>
+                <div class="row">
+                    <div class="col s12">
+                        <md-input 
+                            md-label="Name"
+                            md-value.bind="tenant.name">
+                        </md-input>
+                    </div>
+                    <div class="col s6">
+                        <md-input
+                            md-label="Email"
+                            md-value.bind="tenant.email">
+                        </md-input>
+                    </div>
+                    <div class="col s6">
+                        <md-input
+                            md-type="number"
+                            md-label="Phone"
+                            md-value.bind="tenant.phone">
+                        </md-input>
+                    </div>
+                    <div class="col s12">
+                        <md-input
+                            md-text-area="true"
+                            md-label="Notes"
+                            md-value.bind="tenant.notes">
+                        </md-input>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+				<a
+                    click.delegate="save(tenant)"
+                    md-button
+                    md-waves
+                    class="modal-action modal-close">
+                    Save
+                </a>
+				<a
+                    md-button="flat: true;"
+                    md-waves="color: primary;"
+                    class="modal-action modal-close">
+                    Cancel
+                </a>
+			</div>
+		</div>
+	</div>
+    <!-- List -->
+	<h1>Tenants</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+        <tr repeat.for="tenant of tenants">
+            <td>${tenant.name}</td>
+            <td>${tenant.email}</td>
+            <td>${tenant.phone}</td>
+            <td>${tenant.notes}</td>
+            <td>
+                <i class="material-icons" click.delegate="remove(tenant)">close</i>
+                <i class="material-icons" click.delegate="edit(tenant)">edit</i>
+            </td>
+        </tr>
+    </table>
+</template>

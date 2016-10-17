@@ -26,7 +26,7 @@ exports.handleError = (err, res, message) => {
 }
 
 exports.unauthorizedResponse = (res, message, err) => {
-    if(err) {
+    if (err) {
         console.log(err)
     }
     return res.status(401).send({
@@ -42,9 +42,32 @@ exports.resourceNotFoundResponse = (res) => {
 
 exports.tokenize = (user) => {
     var payload = {
+        accountId: user.accountId,
         sub: user._id,
         iat: moment().unix(),
         exp: moment().add(14, 'days').unix()
     };
     return jwt.encode(payload, config.TOKEN_SECRET);
+}
+
+exports.unwrapToken = (req) => {
+    let auth = req.headers['authorization'];
+    if (auth) {
+        let token = auth.split('Bearer ')[1];
+        let decoded = jwt.decode(token, config.TOKEN_SECRET);
+        req.accountId = decoded.accountId;
+    }
+    return req;
+}
+
+exports.accountFilter = (accountId, query) => {
+    query = (query) ? query : {};
+    query.accountId = accountId;
+    return query;
+}
+
+exports.deleteFilter = (query) => {
+    query = (query) ? query : {};
+    query.deleteTime = null;
+    return query;
 }

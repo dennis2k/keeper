@@ -21,6 +21,6 @@ exports.authenticate = (req, res) => {
             return res.send({ user: _user, token: util.tokenize(_user) });
         })
         .catch((err) => {
-            return util.unauthorizedResponse(res, "Wrong email / password",err);            
+            return util.unauthorizedResponse(res, "Wrong email / password",err);
         });
 };

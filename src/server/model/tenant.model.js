@@ -1,24 +1,23 @@
 'use strict'
 
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+const util = require('./../util');
 
-var model = mongoose.model('tenant', new mongoose.Schema({
+
+
+const model = mongoose.model('tenant', new Schema({
+    accountId: { type: ObjectId, required: true, ref: 'account' },
     name: { type: String, required: true },
-    phone: {type: Number},
+    phone: { type: Number },
     email: String,
     notes: String,
-    create_time: {type: Number, default new Date().getTime()},
-    delete_time: Number
+    createTime: { type: Number, default: new Date().getTime() },
+    deleteTime: { type: Number, default: null, select: false }
 }));
 
-var options = {
-    onError: (err, req, res, next) => {
-        const statusCode = req.erm.statusCode // 400 or 404
-        res.status(statusCode).json({
-            message: err.message
-        })
-    }
-}
+const options = require('./base-options')(model);
 
 exports.model = model;
 exports.options = options;

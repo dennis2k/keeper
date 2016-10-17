@@ -21,6 +21,7 @@ export class App {
     config.options.root = '/';
     config.map([
       { route: '', name: 'login', moduleId: 'login/login', nav: true, title: 'Login' },
+      { route: 'tenants', name: 'tenants', moduleId: 'tenants/tenant-list', nav: true, title: 'Tenants' },
       { route: 'profile', name: 'profile', moduleId: 'profile/profile', nav: true, title: 'Profile' },
       { route: 'signup', name: 'signup', moduleId: 'login/signup', nav: true, title: 'Sign up' },
       { route: 'contracts', name: 'contracts', moduleId: 'contracts/contract-list', nav: true, title: 'Contracts' },
