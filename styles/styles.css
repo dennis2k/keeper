@@ -1,4 +1,14 @@
-
+.definition-list {
+    width: 100%;
+}
+.definition-list > dt {
+    width: 50%;
+    text-align: left;
+}
+.definition-list > dd {
+    width: 50%;
+    text-align: right;
+}
 .preload-wrapper {
   position: absolute;
   left: 50%;

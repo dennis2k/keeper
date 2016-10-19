@@ -1,0 +1,40 @@
+<template>
+    <require from="./../converters/currency"></require>
+    <div class="row">
+        <div class="col s12">
+            <h4>Assets</h4>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col s6 m6 l4" repeat.for="asset of assets">
+			<md-card                 
+                md-image="https://aurelia-ui-toolkits.github.io/demo-materialize/images/card-sample-2.jpg"
+                md-title="${asset.name}"
+				md-reveal="true">
+				<div>
+                    <div class="row">
+                        <span class="left">Value:</span>
+                        <span class="right">${asset.value | currency}</span>
+                    </div>
+                    <div class="row">
+                        <span class="left">Depth:</span>
+                        <span class="right">${asset.depth | currency}</span>
+                    </div>
+                    <div class="row">
+                        <span class="left">Subjects:</span>
+                        <span class="right">${asset.subjects.length}</span>
+                    </div>
+                    <div class="row">
+                        <a route-href="route: assetsDetails; params.bind: {id: asset._id}">More</a>
+                    </div>
+                    
+				</div>
+				<div slot="reveal-text">
+					Here is some more information about this product that is only revealed once clicked on.
+				</div>
+			</md-card>
+		</div>
+
+	</div>
+
+</template>

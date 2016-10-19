@@ -10,7 +10,7 @@ export class UserService extends ApiService<UserModel> {
         this.storageService.set(StorageService.USER,content);
     }
 
-    public getUserFromStorage(): UserModel | undefined {
+    getUserFromStorage(): UserModel | undefined {
         let user = this.storageService.get<IAuth>(StorageService.USER);
         if (!user)
             return undefined;
@@ -19,7 +19,7 @@ export class UserService extends ApiService<UserModel> {
         return userModel;
     }
 
-    public removeUserFromStorage() {
+    removeUserFromStorage() {
         this.storageService.remove(StorageService.USER);
     }
 

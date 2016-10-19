@@ -1,7 +1,7 @@
 import { TenantService } from './tenant.service';
 import { TenantModel } from './tenant.model';
 import { autoinject } from 'aurelia-framework';
-import {AuthService} from 'aurelia-auth';
+import { AuthService } from 'aurelia-auth';
 
 @autoinject()
 export class TenantList {
@@ -19,6 +19,12 @@ export class TenantList {
 
     canActivate() {
         return this.authService.isAuthenticated();
+
+    }
+
+    add() {
+        this.tenant = new TenantModel();
+        ($("#tenant") as any).openModal();
     }
 
     edit(tenant: TenantModel) {

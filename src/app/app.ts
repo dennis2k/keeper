@@ -22,11 +22,10 @@ export class App {
     config.map([
       { route: '', name: 'login', moduleId: 'login/login', nav: true, title: 'Login' },
       { route: 'tenants', name: 'tenants', moduleId: 'tenants/tenant-list', nav: true, title: 'Tenants' },
+      { route: 'assets', name: 'assets', moduleId: 'assets/asset-list', nav: true, title: 'Assets' },
+      { route: 'assets/:id', name: 'assetsDetails', moduleId: 'assets/asset-details', nav: false, title: 'Asset details' },
       { route: 'profile', name: 'profile', moduleId: 'profile/profile', nav: true, title: 'Profile' },
-      { route: 'signup', name: 'signup', moduleId: 'login/signup', nav: true, title: 'Sign up' },
-      { route: 'contracts', name: 'contracts', moduleId: 'contracts/contract-list', nav: true, title: 'Contracts' },
-      { route: 'cats', name: 'cats', moduleId: 'cats/cat-list', nav: true, title: 'Cats' },
-      { route: 'contracts/:name', name: 'contract-details', moduleId: 'contracts/contract-details', title: 'Contract Details' }
+      { route: 'signup', name: 'signup', moduleId: 'login/signup', nav: true, title: 'Sign up' }
     ]);
     this.router = router;
   }

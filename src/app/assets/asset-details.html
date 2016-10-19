@@ -1,0 +1,39 @@
+<template>
+    <require from="./../converters/currency"></require>
+	<h1>Details </h1>
+	<div class="row">
+		<div class="col s12">
+			<md-input md-label="Name" md-value.bind="asset.name">
+			</md-input>
+		</div>
+		<div class="col s6">
+			<md-input md-type="number" md-label="Value" md-value.bind="asset.value">
+			</md-input>
+		</div>
+		<div class="col s6">
+			<md-input md-type="number" md-label="Depth" md-value.bind="asset.depth">
+			</md-input>
+		</div>
+	</div>
+    <div class="row">
+        <div class="col s12">
+            <table class="bordered">
+                <tr>
+                    <th>Address</th>
+                    <th>Rooms</th>
+                    <th>Size</th>
+                    <th>Exp</th>
+                    <th>Rent</th>
+                    <th>Rent</th>
+                </tr>
+                <tr repeat.for="subject of asset.subjects">
+                    <td>${subject.address}</td>
+                    <td>${subject.address}</td>
+                    <td>${subject.address}</td>
+                    <td>${subject.address}</td>
+                    <td>${subject.address}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</template>
