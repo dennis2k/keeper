@@ -79,13 +79,10 @@ export class Query {
     }
 
     serialize(): string {
+        //let params = new URLSearchParams();
         let filter: any = {};
         filter.query = (this.isQueryEmpty()) ? {} : this._query;
-        let relations = "";
-        this._populate.forEach((relation) => {
-            relations += "," + relation;
-        });
-        relations = relations.replace(/(^,)|(,$)/g, "");
+        let relations = this._populate.join(",");
         if (relations.length > 0)
             filter.populate = relations;
         if (this._skip)
@@ -101,6 +98,10 @@ export class Query {
                 filter.select = this._select;
         }
 
-        return "?query=" + JSON.stringify(filter.query);
+        let params = Object.keys(filter).map((key) => {
+            return key + '=' + JSON.stringify(filter[key]);
+        }).join('&');
+        return "?" + params;
+        //return "?query=" + JSON.stringify(filter.query);
     }
 }

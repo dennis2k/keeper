@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var model = mongoose.model('expense', new Schema({
+var model = mongoose.model('payment', new Schema({
     accountId: { type: ObjectId, required: true, ref: 'account', select: false },
     assetId: { type: ObjectId, required: true, ref: 'asset' },
     subjectId: { type: String, required: true },

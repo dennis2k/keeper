@@ -1,5 +1,7 @@
+import { TenantModel } from '../tenants/tenant.model';
+import { TenantService } from '../tenants/tenant.service';
 import { AssetService } from './asset.service';
-import { AssetModel } from './asset.model';
+import { AssetModel, Recuring, Subject } from './asset.model';
 import { autoinject } from 'aurelia-framework';
 import { RouteConfig } from 'aurelia-router';
 import { AuthService } from 'aurelia-auth';
@@ -7,11 +9,12 @@ import { AuthService } from 'aurelia-auth';
 @autoinject()
 export class AssetDetails {
     asset: AssetModel;
+    tenants: TenantModel[] = [];
 
     constructor(
         private assetService: AssetService,
-        private authService: AuthService) {
-    }
+        private authService: AuthService,
+        private tenantService: TenantService) { }
 
     canActivate() {
         return this.authService.isAuthenticated();
@@ -19,31 +22,30 @@ export class AssetDetails {
 
     activate(params: any, routeConfig: RouteConfig) {
         if (params.id) {
-            this.assetService.getById(params.id).then(response => this.asset = response);
+            let query = this.assetService.createQuery();
+            query.populate(['subjects.tenant']);
+            this.assetService.getById(params.id, true, query).then(response => this.asset = response);
         } else {
             this.asset = new AssetModel();
         }
+        this.tenantService.getAll().then(tenants => {
+            this.tenants = tenants;
+        });
     }
 
+    addSubject(subject: Subject) {
+        this.asset.subjects.push(subject);
+        this.save(this.asset);
+    }
 
-    /*edit(tenant: TenantModel) {
-        this.tenant = tenant;
-        ($("#tenant") as any).openModal();
-    }*/
+    addRecuring(recuring: Recuring) {
+        this.asset.recurings.push(recuring);
+        this.save(this.asset);
+    }
 
-    /*save(tenant: TenantModel) {
-        console.log(tenant);
-        this.tenantService.save(tenant).then((response) => {
-            if (this.tenant._id)
-                return;
-            tenant._id = response._id;
-            this.tenants.push(tenant);
-        });
-    }*/
-
-    remove(asset: AssetModel) {
-        this.assetService.remove(asset._id).then(() => {
-            this.assets.splice(this.assets.indexOf(asset), 1);
+    save(asset: AssetModel) {
+        this.assetService.save(asset).then((response) => {
+            console.log(response);
         });
     }
 }

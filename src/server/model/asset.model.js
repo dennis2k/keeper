@@ -17,14 +17,14 @@ var model = mongoose.model('asset', new Schema({
         city: { type: String, required: true },
         rooms: Number,
         size: Number,
-        tenant: String,
+        tenant: { type: ObjectId, ref: 'tenant' },
         monthlyExpenditure: { type: Number, required: true },
         monthlyRent: { type: Number, required: true },
         monthlyTotal: { type: Number, required: true },
         availableFrom: Number,
         state: { type: String, required: true, enum: ["NEW", "NORMAL", "BAD"] },
         deposits: [{
-            tenant: { type: String, required: true },
+            tenant: { type: ObjectId, required: true, ref: 'tenant' },
             deposit: { type: Number, required: true },
             payout: { type: Number, default: 0 },
             payoutTime: Number,
@@ -33,7 +33,8 @@ var model = mongoose.model('asset', new Schema({
         }]
     }],
     recurings: [{
-        interval: { type: String, required: true, enum: ['MONTHLY', 'QUARTERLY', 'BIANNUALLY', 'ANUALLY'] },
+        name: {type: String, required: true},
+        interval: { type: String, required: true, enum: ['MONTHLY', 'QUARTERLY', 'BIANUALLY', 'ANUALLY'] },
         startingMonth: { type: Number, required: true, min: 1, max: 12 },
         startingYear: { type: Number, required: true, minLength: 4, maxLength: 4, min: new Date().getFullYear() },
         amount: { type: Number, required: true },
@@ -43,7 +44,6 @@ var model = mongoose.model('asset', new Schema({
 }));
 
 const options = require('./base-options')(model);
-
 
 exports.model = model;
 exports.options = options;

@@ -1,0 +1,42 @@
+<template>
+	<div id="recuring" class="modal">
+		<div class="modal-content">
+			<h4>Add recuring expense</h4>
+
+			<div class="row">
+			    <div class="col s12">
+    				<md-input md-label="Name" md-value.bind="recuring.name">
+    				</md-input>
+    			</div>
+    			<div class="col s6">
+    				<md-input md-label="Interval" md-value.bind="recuring.interval">
+    				</md-input>
+    			</div>
+    			<div class="col s6">
+    				<md-input md-type="number" md-label="Amount" md-value.bind="recuring.amount">
+    				</md-input>
+    			</div>
+    			<div class="col s6">
+    				<md-input md-label="Starting Month" md-value.bind="recuring.startingMonth">
+    				</md-input>
+    			</div>
+    			<div class="col s6">
+    				<md-input md-label="Starting Year" md-value.bind="recuring.startingYear">
+    				</md-input>
+    			</div>
+    			<div class="col s12">
+    				<md-input md-textarea="true" md-label="Notes" md-value.bind="recuring.notes">
+    				</md-input>
+    			</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a click.delegate="dispatch(recuring)" md-button md-waves class="modal-action modal-close">
+                        Save
+                    </a>
+			<a md-button="flat: true;" md-waves="color: primary;" class="modal-action modal-close">
+                        Cancel
+                    </a>
+		</div>
+	</div>
+</template>

@@ -1,0 +1,46 @@
+<template bindable="subject,tenants,asset">
+	<div class="row">
+		<div class="col s4">
+			<select md-select="label: Tenant" value.two-way="subject.tenant">
+                <option value="" disabled selected>Choose...</option>
+                <option repeat.for="tenant of tenants" model.bind="tenant">${tenant.name}</option>
+            </select>
+		</div>
+		<div class="col s4">
+			<md-input md-label="Address" md-value.bind="subject.address">
+			</md-input>
+		</div>
+		<div class="col s4">
+			<md-input md-label="City" md-value.bind="subject.city">
+			</md-input>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s4">
+			<md-input md-type="number" md-label="Size" md-value.bind="subject.size">
+			</md-input>
+		</div>
+		<div class="col s4">
+			<md-input md-type="number" md-label="Rooms" md-value.bind="subject.rooms">
+			</md-input>
+		</div>
+		<div class="col s4">
+			<md-input md-label="State" md-value.bind="subject.state">
+			</md-input>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s4">
+			<md-input md-type="number" md-label="Expenditure" md-value.bind="subject.monthlyExpenditure" change.delegate="asset.setSubjectTotal(subject)">
+			</md-input>
+		</div>
+		<div class="col s4">
+			<md-input md-type="number" md-label="Rent" md-value.bind="subject.monthlyRent" change.delegate="asset.setSubjectTotal(subject)">
+			</md-input>
+		</div>
+		<div class="col s4">
+			<md-input md-type="number" md-disabled="true" md-label="Total" md-value.bind="subject.monthlyTotal">
+			</md-input>
+		</div>
+	</div>
+</template>

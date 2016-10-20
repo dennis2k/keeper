@@ -43,8 +43,12 @@ export abstract class ApiService<T extends Entity> {
         return this.request(url, Method.GET, entity);
     }
 
-    getById(id: string, withEntity: boolean = true, cacheId?: string): Promise<T> {
+    getById(id: string, withEntity: boolean = true, query?: Query): Promise<T> {
         let url = this.resource + "/" + id;
+        if (query) {
+            url += query.serialize();
+        }
+        console.log(url);
         if (this.useCache) {
             let cache = this.getCachedContent(url);
             if (cache instanceof Promise) {
@@ -52,7 +56,7 @@ export abstract class ApiService<T extends Entity> {
             }
         }
         let entity = (withEntity) ? this.model : undefined;
-        return this.request(url, Method.GET, entity, cacheId);
+        return this.request(url, Method.GET, entity);
     }
 
     save(entity: T): Promise<T> {
@@ -70,7 +74,7 @@ export abstract class ApiService<T extends Entity> {
         return this.request(url, Method.DELETE);
     }
 
-    request(url: string, method: string = Method.GET, entity?: T, cacheId?: string): Promise<T | T[]> {
+    request(url: string, method: string = Method.GET, entity?: T): Promise<T | T[]> {
         let config = this.getConfig(method, entity);
         return this.http
             .fetch(url, config)
@@ -114,7 +118,7 @@ export abstract class ApiService<T extends Entity> {
         return config;
     }
 
-    protected createQuery(): Query {
+    public createQuery(): Query {
         return new Query();
     }
 

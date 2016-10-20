@@ -19,15 +19,11 @@ export class TenantList {
 
     canActivate() {
         return this.authService.isAuthenticated();
-
     }
 
-    add() {
-        this.tenant = new TenantModel();
-        ($("#tenant") as any).openModal();
-    }
-
-    edit(tenant: TenantModel) {
+    edit(tenant?: TenantModel) {
+        if (!tenant)
+            tenant = new TenantModel();
         this.tenant = tenant;
         ($("#tenant") as any).openModal();
     }

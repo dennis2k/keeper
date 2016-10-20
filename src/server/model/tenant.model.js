@@ -5,8 +5,6 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 const util = require('./../util');
 
-
-
 const model = mongoose.model('tenant', new Schema({
     accountId: { type: ObjectId, required: true, ref: 'account' },
     name: { type: String, required: true },

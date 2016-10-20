@@ -10,7 +10,7 @@ export function configure(aurelia: Aurelia) {
   return System.import(materialize).then(() => {
     aurelia.use
       .standardConfiguration()
-      //.developmentLogging()
+      .developmentLogging()
       // Install and configure the plugins
       .plugin('martingust/aurelia-repeat-strategies')
       .plugin('aurelia-materialize-bridge', bridge => bridge.useAll())

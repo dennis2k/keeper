@@ -1,5 +1,41 @@
 <template>
-    <require from="./../converters/currency"></require>
+	<require from="./../converters/currency"></require>
+	<require from="./add-subject"></require>
+	<require from="./add-recuring"></require>
+    <require from="./subject-item.html"></require>
+    <require from="./recuring-item.html"></require>
+    
+
+	<add-subject
+        add.call="addSubject(subject)"
+        toggle.bind="openSubjectModal"
+        tenants.bind="tenants">
+	</add-subject>
+
+    <add-recuring
+        add.call="addRecuring($event)"
+        toggle.bind="openRecuringModal">
+    </add-recuring> 
+    
+
+	<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+		<a md-button="floating: true; large: true;" md-waves="color: light; circle: true;">
+			<i class="large material-icons">mode_edit</i>
+		</a>
+		<ul>
+			<li>
+				<a click.delegate="openSubjectModal = !openSubjectModal" md-tooltip="position: left; text: Add subject" md-button="floating: true;"
+					md-waves="color: light; circle: true;" class="red">
+					<i class="material-icons">insert_chart</i>
+				</a>
+			</li>
+			<li>
+				<a click.delegate="openRecuringModal = !openRecuringModal" md-tooltip="position:left; text: Add recuring" md-button="floating: true;" md-waves="color: light; circle: true;" class="yellow darken-1">
+					<i class="material-icons">format_quote</i>
+				</a>
+			</li>
+		</ul>
+	</div>
 	<h1>Details </h1>
 	<div class="row">
 		<div class="col s12">
@@ -15,25 +51,30 @@
 			</md-input>
 		</div>
 	</div>
-    <div class="row">
-        <div class="col s12">
-            <table class="bordered">
-                <tr>
-                    <th>Address</th>
-                    <th>Rooms</th>
-                    <th>Size</th>
-                    <th>Exp</th>
-                    <th>Rent</th>
-                    <th>Rent</th>
-                </tr>
-                <tr repeat.for="subject of asset.subjects">
-                    <td>${subject.address}</td>
-                    <td>${subject.address}</td>
-                    <td>${subject.address}</td>
-                    <td>${subject.address}</td>
-                    <td>${subject.address}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col s12">
+            <h4>Subjects</h4>
+			<ul md-collapsible="accordion: true;">
+				<li repeat.for="subject of asset.subjects">
+					<div class="collapsible-header ${subject.active? 'active' : ''}"><i class="mdi-image-filter-drama"></i>${subject.address} <span class="right">${subject.monthlyTotal | currency}</span></div>
+					<div class="collapsible-body box-margin">
+						<subject-item tenants.bind="tenants" subject.bind="subject" asset.bind="asset">
+						</subject-item>
+					</div>
+				</li>
+			</ul>
+            <div class="right" style="padding-right: 1rem; font-weight: bold; color: green;">${asset.getMonthlyTotal() | currency}</div>
+            <h4>Recuring expenses</h4>
+            <ul md-collapsible="accordion: true;">
+				<li repeat.for="recuring of asset.recurings">
+					<div class="collapsible-header ${recuring.active? 'active' : ''}"><i class="mdi-image-filter-drama"></i>${recuring.name} <span class="right">${recuring.amount | currency}</span></div>
+					<div class="collapsible-body box-margin">
+                        <recuring-item recuring.bind="recuring"></recuring-item>
+					</div>
+				</li>
+			</ul>
+            <div class="right" style="padding-right: 1rem; font-weight: bold; color: darkred;">${asset.getMonthlyExpenses() | currency}</div>
+			<button md-button md-waves click.delegate="save(asset)">Save</button>
+		</div>
+	</div>
 </template>

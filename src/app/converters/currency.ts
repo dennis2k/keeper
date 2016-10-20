@@ -1,5 +1,6 @@
 export class CurrencyValueConverter {
     toView(value) {
-        return "Kr. " + value.format(2, 3, '.', ',');
+        let val = new Number(value);
+        return "Kr. " + (val as any).format(2, 3, '.', ',');
     }
 }
