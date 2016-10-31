@@ -1,3 +1,4 @@
+import { Router } from 'aurelia-router';
 import { AssetService } from './asset.service';
 import { AssetModel } from './asset.model';
 import { autoinject } from 'aurelia-framework';
@@ -10,33 +11,27 @@ export class AssetList {
 
     constructor(
         private assetService: AssetService,
-        private authService: AuthService) {
+        private authService: AuthService,
+        private router: Router) {
 
-        this.assetService.getAll().then(response => this.assets = response);
+        this.assetService.get().then(response => this.assets = response);
     }
 
     canActivate() {
         return this.authService.isAuthenticated();
     }
 
-    /*edit(tenant: TenantModel) {
-        this.tenant = tenant;
-        ($("#tenant") as any).openModal();
-    }*/
-
-    /*save(tenant: TenantModel) {
-        console.log(tenant);
-        this.tenantService.save(tenant).then((response) => {
-            if (this.tenant._id)
-                return;
-            tenant._id = response._id;
-            this.tenants.push(tenant);
-        });
-    }*/
-
     remove(asset: AssetModel) {
+        let c = confirm("Er du sikker?");
+        if (!c)
+            return;
+
         this.assetService.remove(asset._id).then(() => {
             this.assets.splice(this.assets.indexOf(asset), 1);
         });
+    }
+
+    navigateToAsset(id: string) {
+        this.router.navigateToRoute('assetsDetails', { id: id });
     }
 }

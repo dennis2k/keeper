@@ -17,6 +17,7 @@ export abstract class ApiService<T extends Entity> {
     protected notifyOnCreate = false;
     protected notifyOnUpdate = false;
     protected notifyOnDelete = false;
+    protected relations: string[] = [];
 
     constructor(
         protected http: HttpClient,
@@ -28,8 +29,38 @@ export abstract class ApiService<T extends Entity> {
         this.configure(storageService);
     }
 
-    getAll(query?: Query, withEntity: boolean = true): Promise<T[]> {
+    createQuery(): Query {
+        return new Query();
+    }
+
+    populate(relations: string[]) {
+        this.relations = relations;
+        return this;
+    }
+
+    getAll(withEntity: boolean = true): Promise<T[]> {
         let url = this.resource;
+        if (this.relations.length > 0) {
+            let query = this.createQuery();
+            query.populate(this.relations);
+            return this.getByQuery(query, withEntity);
+        }
+        if (this.useCache) {
+            let cache = this.getCachedContent(url);
+            if (cache instanceof Promise) {
+                return cache;
+            }
+        }
+        let entity = (withEntity) ? this.model : undefined;
+        return this.request(url, Method.GET, entity);
+    }
+
+    getByQuery(query?: Query, withEntity: boolean = true): Promise<T[]> {
+        let url = this.resource;
+        if (this.relations.length > 0) {
+            query = (query) ? query : this.createQuery();
+            query.populate(this.relations);
+        }
         if (query) {
             url += query.serialize();
         }
@@ -60,12 +91,12 @@ export abstract class ApiService<T extends Entity> {
     }
 
     save(entity: T): Promise<T> {
+        console.log("SAVING", entity);
         let method = entity._id ? Method.PUT : Method.POST;
         let url = this.resource;
         if (entity._id) {
             url += "/" + entity._id;
         }
-        entity.beforeSave();
         return this.request(url, method, entity);
     }
 
@@ -80,8 +111,9 @@ export abstract class ApiService<T extends Entity> {
             .fetch(url, config)
             .then(r => (r.status === 204) ? r : r.json())
             .then(data => {
+                this.relations.length = 0;
                 // map to entity and store in cache
-                if (method === Method.GET && entity)
+                if (entity)
                     data = this.mapToEntity(data);
                 if (method === Method.GET && this.useCache)
                     this.cachingService.set(url, data);
@@ -98,6 +130,7 @@ export abstract class ApiService<T extends Entity> {
                 return data;
             })
             .catch((err: Response) => {
+                this.relations.length = 0;
                 console.log(err);
                 return err.text().then(text => {
                     this.toaster.error(text);
@@ -116,10 +149,6 @@ export abstract class ApiService<T extends Entity> {
         if (entity && method !== Method.GET)
             config.body = json(entity);
         return config;
-    }
-
-    public createQuery(): Query {
-        return new Query();
     }
 
     private mapToEntity(data: any): any {

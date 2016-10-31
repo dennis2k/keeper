@@ -1,40 +1,55 @@
 <template>
-    <require from="./../converters/currency"></require>
+     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a 
+            md-button="floating: true; large: true;"
+            md-waves="color: light; circle: true;"
+            md-tooltip="position: left; text: Tilføj ny;"
+            click.delegate="navigateToAsset('new')">
+            <i class="large material-icons">add</i>
+        </a>
+    </div>
+
     <div class="row">
         <div class="col s12">
-            <h4>Assets</h4>
+            <h4>${app.assets | t}</h4>
         </div>
     </div>
 	<div class="row">
 		<div class="col s6 m6 l4" repeat.for="asset of assets">
-			<md-card                 
-                md-image="https://aurelia-ui-toolkits.github.io/demo-materialize/images/card-sample-2.jpg"
-                md-title="${asset.name}"
-				md-reveal="true">
+			<md-card click.delegate="navigateToAsset(asset._id)">
+                <i class="material-icons right" click.delegate="remove(asset)">close</i>
+                <div class="card-title">${asset.address}</div>
 				<div>
                     <div class="row">
-                        <span class="left">Value:</span>
+                        <span class="left">${'app.city' | t}:</span>
+                        <span class="right">${asset.city}</span>
+                    </div>
+                    <div class="row">
+                        <span class="left">${'app.value' | t}:</span>
                         <span class="right">${asset.value | currency}</span>
                     </div>
                     <div class="row">
-                        <span class="left">Depth:</span>
+                        <span class="left">${'app.depth' | t}:</span>
                         <span class="right">${asset.depth | currency}</span>
                     </div>
                     <div class="row">
-                        <span class="left">Subjects:</span>
+                        <span class="left">${'app.subjects' | t}:</span>
                         <span class="right">${asset.subjects.length}</span>
                     </div>
                     <div class="row">
-                        <a route-href="route: assetsDetails; params.bind: {id: asset._id}">More</a>
+                        <span class="left">${'app.monthly.income' | t}:</span>
+                        <span class="right text-success bold">${asset.getMonthlyTotal() | currency}</span>
                     </div>
-                    
-				</div>
-				<div slot="reveal-text">
-					Here is some more information about this product that is only revealed once clicked on.
+                    <div class="row">
+                        <span class="left">${'app.monthly.expense' | t}:</span>
+                        <span class="right text-danger bold">${asset.getMonthlyExpenses() | currency}</span>
+                    </div>
+                    <div class="row">
+                        <span class="left">${'app.monthly.profit' | t}:</span>
+                        <span class="right bold ${asset.isMonthlyPossitiv ? 'text-success' : 'text-danger'}">${asset.getMonthlyProfit() | currency}</span>
+                    </div>
 				</div>
 			</md-card>
 		</div>
-
 	</div>
-
 </template>

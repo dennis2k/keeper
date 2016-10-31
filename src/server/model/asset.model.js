@@ -5,7 +5,8 @@ var ObjectId = Schema.ObjectId;
 
 var model = mongoose.model('asset', new Schema({
     accountId: { type: ObjectId, required: true, ref: 'account', select: false },
-    name: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
     value: { type: Number },
     depth: { type: Number },
     lat: Number,
@@ -13,11 +14,10 @@ var model = mongoose.model('asset', new Schema({
     createTime: { type: Number, default: new Date().getTime() },
     deleteTime: { type: Number, default: null, select: false },
     subjects: [{
-        address: { type: String, required: true },
-        city: { type: String, required: true },
+        identifier: { type: String, required: true },
         rooms: Number,
         size: Number,
-        tenant: { type: ObjectId, ref: 'tenant' },
+        tenant: { type: ObjectId, ref: 'tenant', default: null },
         monthlyExpenditure: { type: Number, required: true },
         monthlyRent: { type: Number, required: true },
         monthlyTotal: { type: Number, required: true },
@@ -33,7 +33,7 @@ var model = mongoose.model('asset', new Schema({
         }]
     }],
     recurings: [{
-        name: {type: String, required: true},
+        name: { type: String, required: true },
         interval: { type: String, required: true, enum: ['MONTHLY', 'QUARTERLY', 'BIANUALLY', 'ANUALLY'] },
         startingMonth: { type: Number, required: true, min: 1, max: 12 },
         startingYear: { type: Number, required: true, minLength: 4, maxLength: 4, min: new Date().getFullYear() },
@@ -44,6 +44,5 @@ var model = mongoose.model('asset', new Schema({
 }));
 
 const options = require('./base-options')(model);
-
 exports.model = model;
 exports.options = options;

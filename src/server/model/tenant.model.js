@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 const util = require('./../util');
+const assetRepo = require('./asset.model').model;
 
 const model = mongoose.model('tenant', new Schema({
     accountId: { type: ObjectId, required: true, ref: 'account' },
@@ -16,6 +17,5 @@ const model = mongoose.model('tenant', new Schema({
 }));
 
 const options = require('./base-options')(model);
-
 exports.model = model;
 exports.options = options;

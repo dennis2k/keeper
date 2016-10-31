@@ -1,27 +1,30 @@
-<template bindable="recuring">
+<template bindable="recuring, intervals, months">
 	<div class="row">
 		<div class="col s12">
-			<md-input md-label="Name" md-value.bind="recuring.name">
+			<md-input md-label="${'app.name' | t}" md-value.bind="recuring.name">
 			</md-input>
 		</div>
 		<div class="col s6">
-			<md-input md-label="Interval" md-value.bind="recuring.interval">
+            <select md-select="label: Interval" md-select.ref="select" value.two-way="recuring.interval">
+                <option repeat.for="interval of intervals" model.bind="interval.id">${interval.display | t}</option>  
+            </select>
+		</div>
+		<div class="col s6">
+			<md-input md-type="number" md-label="${'app.amount' | t}" md-value.bind="recuring.amount">
 			</md-input>
 		</div>
 		<div class="col s6">
-			<md-input md-type="number" md-label="Amount" md-value.bind="recuring.amount">
-			</md-input>
+            <select md-select="label: Start måned" value.two-way="recuring.startingMonth">
+                <option repeat.for="month of months" model.bind="month.id">${month.display | t}</option>  
+            </select>
 		</div>
 		<div class="col s6">
-			<md-input md-label="Starting Month" md-value.bind="recuring.startingMonth">
-			</md-input>
-		</div>
-		<div class="col s6">
-			<md-input md-label="Starting Year" md-value.bind="recuring.startingYear">
-			</md-input>
+            <select md-select="label: Start år" value.two-way="recuring.startingYear">
+                <option repeat.for="year of [2016,2017,2018,2019,2020]" model.bind="month.id">${year}</option>  
+            </select>
 		</div>
 		<div class="col s12">
-			<md-input md-textarea="true" md-label="Note" md-value.bind="recuring.note">
+			<md-input md-textarea="true" md-label="${'app.notes' | t}" md-value.bind="recuring.note">
 			</md-input>
 		</div>
 	</div>

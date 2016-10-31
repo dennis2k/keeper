@@ -1,45 +1,42 @@
-<template bindable="subject,tenants,asset">
+<template bindable="subject,tenants,asset,states">
 	<div class="row">
 		<div class="col s4">
-			<select md-select="label: Tenant" value.two-way="subject.tenant">
-                <option value="" disabled selected>Choose...</option>
-                <option repeat.for="tenant of tenants" model.bind="tenant">${tenant.name}</option>
+			<select md-select="label: Lejer" value.two-way="subject.tenant">
+                <option value="" disabled selected>${'app.choose' | t}</option>
+                <option repeat.for="tenant of tenants" model.bind="tenant._id">${tenant.name | t}</option>
             </select>
 		</div>
 		<div class="col s4">
-			<md-input md-label="Address" md-value.bind="subject.address">
-			</md-input>
-		</div>
-		<div class="col s4">
-			<md-input md-label="City" md-value.bind="subject.city">
+			<md-input md-label="${'app.identifier' | t}" md-value.bind="subject.identifier">
 			</md-input>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col s4">
-			<md-input md-type="number" md-label="Size" md-value.bind="subject.size">
+			<md-input md-type="number" md-label="${'app.size' | t}" md-value.bind="subject.size">
 			</md-input>
 		</div>
 		<div class="col s4">
-			<md-input md-type="number" md-label="Rooms" md-value.bind="subject.rooms">
+			<md-input md-type="number" md-label="${'app.rooms' | t}" md-value.bind="subject.rooms">
 			</md-input>
 		</div>
 		<div class="col s4">
-			<md-input md-label="State" md-value.bind="subject.state">
-			</md-input>
+            <select md-select="label: Tilstand" md-select.ref="select" value.two-way="subject.state">
+                <option repeat.for="state of states" model.bind="state.id">${state.display | t}</option>  
+            </select>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col s4">
-			<md-input md-type="number" md-label="Expenditure" md-value.bind="subject.monthlyExpenditure" change.delegate="asset.setSubjectTotal(subject)">
+			<md-input md-type="number" md-label="${'app.expenditure' | t}" md-value.bind="subject.monthlyExpenditure" change.delegate="asset.setSubjectTotal(subject)">
 			</md-input>
 		</div>
 		<div class="col s4">
-			<md-input md-type="number" md-label="Rent" md-value.bind="subject.monthlyRent" change.delegate="asset.setSubjectTotal(subject)">
+			<md-input md-type="number" md-label="${'app.rent' | t}" md-value.bind="subject.monthlyRent" change.delegate="asset.setSubjectTotal(subject)">
 			</md-input>
 		</div>
 		<div class="col s4">
-			<md-input md-type="number" md-disabled="true" md-label="Total" md-value.bind="subject.monthlyTotal">
+			<md-input md-type="number" md-disabled="true" md-label="${'app.total' | t}" md-value.bind="subject.monthlyTotal">
 			</md-input>
 		</div>
 	</div>

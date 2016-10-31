@@ -18,6 +18,13 @@ exports.successResponse = (res, message, data) => {
     })
 }
 
+exports.errorResponse = (res, message) => {
+    console.log("errorResponse",message);
+    return res.status(400).send({
+        message: message
+    })
+}
+
 exports.handleError = (err, res, message) => {
     if (err) {
         console.log(err)

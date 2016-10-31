@@ -4,10 +4,10 @@ const util = require("./../util");
 module.exports = (model) => {
     return {
         onError: (err, req, res, next) => {
-            const statusCode = req.erm.statusCode // 400 or 404
-            res.status(statusCode).json({
-                message: err.message
-            })
+            let message = err.message;
+            if(err.code === 11000)
+                message = "Duplicate entry"
+            util.handleError(err, res,  message);
         },
         preDelete: (req, res, next) => {
             model

@@ -1,5 +1,18 @@
+.bold {
+ font-weight: bold;   
+}
+.text-success {
+    color: green;
+}
+.text-danger {
+    color: darkred;
+}
+
 .collapsible-header.active {
-    background-color: #ee6e73;
+    background-color: #2bbbad;
+}
+.container.pinned {
+    display: table !important;
 }
 
 .box-margin {
@@ -61,6 +74,9 @@
 }
 .mb {
   margin-bottom: 0.5em;
+}
+.mt {
+  margin-top: 0.5em;
 }
 .mlr {
   margin-left: 0.5em;
