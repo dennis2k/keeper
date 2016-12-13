@@ -1,3 +1,4 @@
+import { UploadService } from './upload.service';
 import { Toaster } from './toaster';
 import { BroadcastService } from './broadcast.service';
 import { CachingService } from './caching.service';
@@ -24,7 +25,8 @@ export abstract class ApiService<T extends Entity> {
         protected broadcastService: BroadcastService,
         protected cachingService: CachingService,
         protected storageService: StorageService,
-        protected toaster: Toaster
+        protected toaster: Toaster,
+        protected uploadService: UploadService
     ) {
         this.configure(storageService);
     }
@@ -79,7 +81,6 @@ export abstract class ApiService<T extends Entity> {
         if (query) {
             url += query.serialize();
         }
-        console.log(url);
         if (this.useCache) {
             let cache = this.getCachedContent(url);
             if (cache instanceof Promise) {

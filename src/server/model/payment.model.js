@@ -30,8 +30,8 @@ delete options.preDelete;
 options.preCreate = (req, res, next) => {
     let assetId = req.body.assetId;
     let subjectId = req.body.subjectId;
-    let month = req.body.month || new Date().getMonth();
-    let year = req.body.year || new Date().getFullYear();
+    let month = req.body.month;
+    let year = req.body.year;
     assetRepo
         .findOne({ _id: assetId, accountId: req.accountId, 'subjects._id': subjectId }, { 'subjects.$.1': 1 })
         .then((asset) => {

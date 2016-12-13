@@ -9,11 +9,16 @@
 					</th>
 					<th repeat.for="month of months" css.bind="{width: 100/month.length+1 + '%'}">
 						</b>${month | month}</b>
+                        <md-progress md-value.bind="getPercentageProgress(month) & signal: 'refresh'"></md-progress>
 					</th>
 				</tr>
             </table>
         </div>
     </div>
+    <select md-select="label: Måned" value.two-way="importPeriod">
+        <option repeat.for="month of months" model.bind="month">${month | month}</option>
+    </select>
+    <input type="file" change.delegate="fileSelected(importPeriod)" files.bind="importFiles" accept=".csv">  
     <h4>${'app.payment.overview' | t}</h4>
 	<div class="row mb mt" repeat.for="asset of assets">    
 		<div class="col s12">

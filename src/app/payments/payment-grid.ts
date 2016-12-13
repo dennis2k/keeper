@@ -15,6 +15,10 @@ export class PaymentGrid {
     months: string[] = [];
     grid: Map<string, Map<string, PaymentModel>> = new Map<string, Map<string, PaymentModel>>();
 
+    // import
+    importPeriod: string;
+    importFiles: FileList;
+
     constructor(
         private authService: AuthService,
         private paymentService: PaymentService,
@@ -32,13 +36,31 @@ export class PaymentGrid {
             .then(assets => {
                 this.assets = assets;
                 this.populateGrid();
-                console.log(this.months);
                 return this.paymentService.getPreviousPayments();
             })
             .then((payments) => {
                 this.mapPayments(payments, this.assets);
-                
+
             });
+    }
+
+
+    fileSelected(periodString: string): void {
+        let reader = new FileReader();
+        reader.onload =  ()  => {
+            console.log(reader.result);
+        };
+        // start reading the file. When it is done, calls the onload event defined above.
+        reader.readAsBinaryString(this.importFiles[0]);
+
+        console.log(periodString);
+        let file = this.importFiles[0];
+        let period = new Period(periodString);
+        if (file) {
+            this.paymentService.importFile(file, period.month, period.year).then(res => {
+                console.log("IMPOR", res);
+            });
+        }
     }
 
     mapPayments(payments: PaymentModel[], assets: AssetModel[]) {
@@ -64,6 +86,7 @@ export class PaymentGrid {
         this.paymentService.getPreviousPayments().then((payments) => {
             this.mapPayments(payments, this.assets);
         });
+        this.signaler.signal('refresh');
     }
 
     increaseOffset(offset: number) {
@@ -72,32 +95,46 @@ export class PaymentGrid {
         this.paymentService.getPreviousPayments().then((payments) => {
             this.mapPayments(payments, this.assets);
         });
+        this.signaler.signal('refresh');
     }
 
-    getMonthlyTotalPayments(month: string) {
+    getMonthlyTotalPayments(month: string, onlyPaid: boolean = true): number {
         let total = 0;
         this.assets.forEach(asset => {
-            total += this.getAssetMonthlyTotalPayments(month, asset);
+            total += this.getAssetMonthlyTotalPayments(month, asset, onlyPaid);
         });
         return total;
     }
 
-    getAssetMonthlyTotalPayments(month: string, asset: AssetModel) {
+    getAssetMonthlyTotalPayments(when: string, asset: AssetModel, onlyPaid: boolean = true): number {
         let total = 0;
         asset.subjects.forEach(subject => {
             subject.payments.forEach(payment => {
-                if (payment && payment.isPaid && payment.month + "" + payment.year === month) {
-                    total += payment.expectedTotal;
+                if (!payment)
+                    return;
+                let qualified = payment.month + "" + payment.year === when;
+                if (qualified) {
+                    if ((onlyPaid && payment.isPaid) || !onlyPaid) {
+                        total += payment.expectedTotal;
+                    }
                 }
             });
         });
         return total;
     }
 
+    getPercentageProgress(when: string): number {
+        let expected = this.getMonthlyTotalPayments(when, false);
+        let paid = this.getMonthlyTotalPayments(when, true);
+        let val = Math.ceil(((paid / expected) * 100));
+        return isNaN(val) ? 0 : val;
+    }
+
     togglePaid(payment: PaymentModel) {
         payment.isPaid = !!payment.isPaid;
-        this.paymentService.save(payment);
-        this.signaler.signal('refresh');
+        this.paymentService.save(payment).then(() =>
+            this.signaler.signal('refresh')
+        );
     }
 
     createSinglePayment(assetId: string, subject: Subject, when: string) {
@@ -107,6 +144,7 @@ export class PaymentGrid {
         payment.subjectId = subject._id;
         this.paymentService.save(payment).then(response => {
             subject.payments.set(when, response);
+            this.signaler.signal('refresh');
         });
     }
 
@@ -122,7 +160,8 @@ export class PaymentGrid {
 
     removePayment(subject: Subject, payment: PaymentModel, when: string) {
         this.paymentService.remove(payment._id).then(() => {
-            subject.payments.set(when,undefined);
+            subject.payments.set(when, undefined);
+            this.signaler.signal('refresh');
         });
     }
 
@@ -137,7 +176,6 @@ export class PaymentGrid {
             this.months.push(key);
             monthGrid.set(key, undefined);
         }
-        console.log(this.months);
         this.assets.forEach(asset => {
             asset.subjects.forEach(subject => {
                 subject.payments = new Map<string, PaymentModel>(monthGrid);

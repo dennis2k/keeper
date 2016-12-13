@@ -47,6 +47,9 @@ export class AssetDetails {
     }
 
     removeSubject(subject: Subject) {
+        let c = confirm("Er du sikker på du vil slette?");
+        if (!c)
+            return;
         let idx = this.asset.subjects.indexOf(subject);
         this.asset.subjects.splice(idx, 1);
         this.save(this.asset);
@@ -59,6 +62,10 @@ export class AssetDetails {
     }
 
     removeRecuring(recuring: Recuring) {
+        let c = confirm("Er du sikker på du vil slette?");
+        if (!c)
+            return;
+
         let idx = this.asset.recurings.indexOf(recuring);
         this.asset.recurings.splice(idx, 1);
         this.save(this.asset);

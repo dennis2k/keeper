@@ -31,7 +31,8 @@ export class App {
             { route: 'paymentgrid', name: 'payment-grid', moduleId: 'payments/payment-grid', nav: true, title: 'Payment grid' },
             { route: 'assets/:id?', name: 'assetsDetails', moduleId: 'assets/asset-details', nav: false, title: 'Asset details' },
             { route: 'profile', name: 'profile', moduleId: 'profile/profile', nav: true, title: 'Profile' },
-            { route: 'signup', name: 'signup', moduleId: 'login/signup', nav: true, title: 'Sign up' }
+            { route: 'signup', name: 'signup', moduleId: 'login/signup', nav: true, title: 'Sign up' },
+            { route: 'dashboard', name: 'dashboard', moduleId: 'dashboard/dashboard', nav: true, title: 'Dashboard' }
         ]);
         this.router = router;
     }

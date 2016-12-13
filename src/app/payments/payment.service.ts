@@ -1,5 +1,4 @@
 import { C } from '../resources/criteria';
-import { Subject } from '../assets/asset.model';
 import { ApiService } from '../resources/api.service';
 import { autoinject } from 'aurelia-framework';
 import { PaymentModel } from './payment.model';
@@ -16,7 +15,7 @@ export class PaymentService extends ApiService<PaymentModel> {
         now.setMonth(now.getMonth() - monthsOffset);
 
         let query = this.createQuery();
-        query.addCriteria(C.gte("createTime",now.getTime()));
+        query.addCriteria(C.gte("createTime", now.getTime()));
         query.sort('-createTime');
         return super.getByQuery(query);
     }
@@ -26,5 +25,13 @@ export class PaymentService extends ApiService<PaymentModel> {
         paymentModel.subjectId = subjectId;
         paymentModel.assetId = assetId;
         return super.save(paymentModel);
+    }
+
+    importFile(file: File, month: number, year: number) {
+        let form = new FormData();
+        form.append('month', month);
+        form.append('year', year);
+        form.append("file", file);
+        return this.uploadService.upload("/import", form);
     }
 }

@@ -65,9 +65,12 @@ export class Subject {
     monthlyRent: number;
     monthlyTotal: number;
     availableFrom: number;
+
     state: string = SubjectState.NORMAL;
     deposits: IDeposit[];
     payments: Map<string, PaymentModel> | undefined = new Map<string, PaymentModel>();
+    //cacl
+    m2Cost: number;
 }
 
 interface IDeposit {

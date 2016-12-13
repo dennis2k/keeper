@@ -1,10 +1,12 @@
 'use strict'
 const express = require('express')
 const bodyParser = require('body-parser')
+var path = require('path')
 const bluebird = require('bluebird')
 const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird');
+
 const app = express()
 const router = express.Router()
 const cors = require("cors");
@@ -23,6 +25,7 @@ app.use((req, res, next) => {
 mongoose.connect('mongodb://fiskepind:fiskepind1337@ds033986.mlab.com:33986/keeper-db')
 
 //Routes
+require('./import/import.routes')(app);   
 require("./routes")(app);
 require("./auth/auth.routes")(app);
 app.use(router)
