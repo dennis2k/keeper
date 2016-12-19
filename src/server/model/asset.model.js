@@ -17,6 +17,7 @@ var model = mongoose.model('asset', new Schema({
         identifier: { type: String, required: true },
         rooms: Number,
         size: Number,
+        transactionText: String,
         tenant: { type: ObjectId, ref: 'tenant', default: null },
         monthlyExpenditure: { type: Number, required: true },
         monthlyRent: { type: Number, required: true },

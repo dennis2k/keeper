@@ -1,3 +1,4 @@
+import { FileService } from '../resources/file.service';
 import { Period } from '../resources/period';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { PaymentModel } from './payment.model';
@@ -14,6 +15,8 @@ export class PaymentGrid {
     assets: AssetModel[] = [];
     months: string[] = [];
     grid: Map<string, Map<string, PaymentModel>> = new Map<string, Map<string, PaymentModel>>();
+    modal: any;
+    importResult: IImortResult;
 
     // import
     importPeriod: string;
@@ -21,6 +24,7 @@ export class PaymentGrid {
 
     constructor(
         private authService: AuthService,
+        private fileService: FileService,
         private paymentService: PaymentService,
         private assetService: AssetService,
         private signaler: BindingSignaler) { }
@@ -40,27 +44,75 @@ export class PaymentGrid {
             })
             .then((payments) => {
                 this.mapPayments(payments, this.assets);
-
             });
     }
 
 
-    fileSelected(periodString: string): void {
+    import(periodString: string) {
         let reader = new FileReader();
         reader.onload =  ()  => {
-            console.log(reader.result);
+            let rows = this.fileService.csvToJson(reader.result, true);
+            this.importResult = this.autoCheckByBankStatement(periodString, rows);
+            this.modal.open();
         };
-        // start reading the file. When it is done, calls the onload event defined above.
         reader.readAsBinaryString(this.importFiles[0]);
+    }
 
-        console.log(periodString);
-        let file = this.importFiles[0];
-        let period = new Period(periodString);
-        if (file) {
-            this.paymentService.importFile(file, period.month, period.year).then(res => {
-                console.log("IMPOR", res);
+    confirmImport() {
+        this.signaler.signal('refresh');
+    }
+
+    autoCheckByBankStatement(periodString: string, rows: any[]): IImortResult {
+        let output = {
+            success: [],
+            warning: [],
+            notfound: []
+        };
+        console.log(rows);
+        this.assets.forEach(asset => {
+            asset.subjects.forEach(subject => {
+                let subjectFound = false;
+                rows.forEach((row) => {
+                    let rowTransactionText = row['key_2'];
+                    let subjectMatchTransaction = Subject.compareTransactionText(subject.transactionText, rowTransactionText);
+                    if (subjectMatchTransaction) {
+                        subjectFound = true;
+                        let rowAmount = row['key_4'];
+                        if (parseInt(rowAmount,10) === subject.monthlyTotal) {
+                            let payment = subject.payments.get(periodString);
+                            if (payment) {
+                                payment.isPaid = true;
+                                subject.payments.set(periodString,payment);
+                                this.paymentService.save(payment).then(() => this.signaler.signal('refresh'));
+                            } else {
+                                this.createSinglePayment(asset._id, subject, periodString, true);
+                            }
+                            output.success.push(
+                                [asset.address,subject.identifier,"betaling",subject.monthlyTotal,"bogført"].join(" ")
+                            );
+                        } else {
+                            output.warning.push(
+                                [
+                                    asset.address,
+                                    subject.identifier,
+                                    "forventet betaling",
+                                    subject.monthlyTotal,
+                                    ", faktisk betaling",
+                                    rowAmount
+                                ].join(" ")
+                            );
+                        }
+                    }
+                });
+                if (!subjectFound) {
+                    output.notfound.push(
+                        [asset.address,subject.identifier,"blev ikke bogført"].join(" ")
+                    );
+                }
             });
-        }
+        });
+        
+        return output;
     }
 
     mapPayments(payments: PaymentModel[], assets: AssetModel[]) {
@@ -137,11 +189,12 @@ export class PaymentGrid {
         );
     }
 
-    createSinglePayment(assetId: string, subject: Subject, when: string) {
+    createSinglePayment(assetId: string, subject: Subject, when: string, isPaid: boolean = false) {
         let payment = new PaymentModel();
         payment.setPeriod(when);
         payment.assetId = assetId;
         payment.subjectId = subject._id;
+        payment.isPaid = isPaid;
         this.paymentService.save(payment).then(response => {
             subject.payments.set(when, response);
             this.signaler.signal('refresh');
@@ -182,4 +235,10 @@ export class PaymentGrid {
             });
         });
     }
+}
+
+interface IImortResult {
+    success: string[];
+    warning: string[];
+    notfound: string[];
 }

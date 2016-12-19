@@ -1,80 +1,105 @@
 <template>
-	<require from="./../converters/month"></require>
-	<div class="row mb mt">    
+    <require from="./../converters/month"></require>
+    <div class="row mb mt">
         <div class="col s12">
-			<table md-pushpin="top: 64;" class="container" style="background-color: white; z-index: 300; display: none; border-bottom: 1px solid black;">
-				<tr>
-					<th>
-						<b>${'app.subject' | t}</b>
-					</th>
-					<th repeat.for="month of months" css.bind="{width: 100/month.length+1 + '%'}">
-						</b>${month | month}</b>
+            <table md-pushpin="top: 64;" class="container" style="background-color: white; z-index: 300; display: none; border-bottom: 1px solid black;">
+                <tr>
+                    <th>
+                        <b>${'app.subject' | t}</b>
+                    </th>
+                    <th repeat.for="month of months" css.bind="{width: 100/month.length+1 + '%'}">
+                        </b>${month | month}</b>
                         <md-progress md-value.bind="getPercentageProgress(month) & signal: 'refresh'"></md-progress>
-					</th>
-				</tr>
+                    </th>
+                </tr>
             </table>
         </div>
     </div>
-    <select md-select="label: Måned" value.two-way="importPeriod">
-        <option repeat.for="month of months" model.bind="month">${month | month}</option>
-    </select>
-    <input type="file" change.delegate="fileSelected(importPeriod)" files.bind="importFiles" accept=".csv">  
+    <div class="row mb mt">
+        <div class="col s12">
+            <select md-select="label: Måned" id="importPeriod" value.two-way="importPeriod">
+                <option repeat.for="month of months" model.bind="month">${month | month}</option>
+            </select>
+            <input type="file" id="omasd" files.bind="importFiles" accept=".csv">
+            <a md-button click.delegate="import(importPeriod)">Import</a>
+        </div>
+    </div>
+
     <h4>${'app.payment.overview' | t}</h4>
-	<div class="row mb mt" repeat.for="asset of assets">    
-		<div class="col s12">
-			<table class="bordered highlight">
-				<tr if.bind="$index === 0">
-					<th>
-						<b>${asset.address}</b>
-					</th>
-					<th repeat.for="month of months" css.bind="{width: 100/month.length+1 + '%'}">
-                    <i if.bind="$first" click.delegate="decreaseOffset(offset)" class="material-icons">navigate_before</i>
-						<span click.delegate="createPaymentsForMonth(month)"></b>${month | month}</b></span>
-                    <i if.bind="$last" click.delegate="increaseOffset(offset)" class="material-icons accent-text">navigate_next</i>
-					</th>
-				</tr>
+    <div class="row mb mt" repeat.for="asset of assets">
+        <div class="col s12">
+            <table class="bordered highlight">
+                <tr if.bind="$index === 0">
+                    <th>
+                        <b>${asset.address}</b>
+                    </th>
+                    <th repeat.for="month of months" css.bind="{width: 100/month.length+1 + '%'}">
+                        <i if.bind="$first" click.delegate="decreaseOffset(offset)" class="material-icons">navigate_before</i>
+                        <span click.delegate="createPaymentsForMonth(month)"></b>${month | month}</b></span>
+                        <i if.bind="$last" click.delegate="increaseOffset(offset)" class="material-icons accent-text">navigate_next</i>
+                    </th>
+                </tr>
                 <tr if.bind="$index !== 0">
                     <th colspan="100%">
-						<b>${asset.address}</b>
-					</th>
+                        <b>${asset.address}</b>
+                    </th>
                 </tr>
-				<tr repeat.for="subject of asset.subjects">
-					<td>
+                <tr repeat.for="subject of asset.subjects">
+                    <td>
                         <span style="margin-left: 15px">${subject.identifier} - <i>${subject.tenant.name || 'app.no.tenant' | t}</i></span>
                     </td>
-					<td repeat.for="[month,payment] of subject.payments" css.bind="{width: 100/month.length+1 + '%'}">
-						<span if.bind="payment._id">
-                        <md-checkbox id.bind="payment.payment._id" md-checked.bind="payment.isPaid" change.delegate="togglePaid(payment)" md-filled-in="true">${payment.expectedTotal}</md-checkbox>
-                        <i 
-                            class="material-icons primary-text"
+                    <td repeat.for="[month,payment] of subject.payments" css.bind="{width: 100/month.length+1 + '%'}">
+                        <span if.bind="payment._id">
+                            <md-checkbox id.bind="payment.payment._id + '_paid'" md-checked.bind="payment.isPaid" change.delegate="togglePaid(payment)" md-filled-in="true">${payment.expectedTotal}</md-checkbox>
+                            <i class="material-icons primary-text"
                             click.delegate="removePayment(subject, payment, month)">remove</i>
-                    </span>
-						<span if.bind="!payment._id">
-                        <i class="material-icons" click.delegate="createSinglePayment(asset._id, subject, month)">add</i>
-                    </span>
-					</td>
-				</tr>
-				<tr>
-					<td><span style="margin-left: 15px"><b>${'app.total' | t}</b></span></td>
-					<td repeat.for="month of months">
-						<b>${getAssetMonthlyTotalPayments(month, asset) | currency: true & signal : 'refresh'}</b>
-					</td>
-				</tr>
-			</table>
-            <div class="section"></div>
-		</div>
-	</div>
-	<div class="row mb mt">
-		<div class="col s12">
-			<h4 class="mt">${'app.all.together' | t}</h4>
-			<table class="bordered highlight">
+                        </span>
+                        <span if.bind="!payment._id">
+                            <i class="material-icons" click.delegate="createSinglePayment(asset._id, subject, month)">add</i>
+                        </span>
+                    </td>
+                </tr>
                 <tr>
-					<td><span style="margin-left: 15px"><b>${'app.total' | t}</b></span></td>
-					<td repeat.for="month of months" css.bind="{width: 100/month.length+1 + '%'}">
-						<b>${getMonthlyTotalPayments(month) | currency: true & signal : 'refresh'}<b/>
+                    <td><span style="margin-left: 15px"><b>${'app.total' | t}</b></span></td>
+                    <td repeat.for="month of months">
+                        <b>${getAssetMonthlyTotalPayments(month, asset) | currency: true & signal : 'refresh'}</b>
+                    </td>
+                </tr>
+            </table>
+            <div class="section"></div>
+        </div>
+    </div>
+    <div class="row mb mt">
+        <div class="col s12">
+            <h4 class="mt">${'app.all.together' | t}</h4>
+            <table class="bordered highlight">
+                <tr>
+                    <td><span style="margin-left: 15px"><b>${'app.total' | t}</b></span></td>
+                    <td repeat.for="month of months" css.bind="{width: 100/month.length+1 + '%'}">
+                        <b>${getMonthlyTotalPayments(month) | currency: true & signal : 'refresh'}<b/>
 					</td>
 				</tr>
 			</table>
 		</div>
 	</div>
+
+    
+
+    <div id="importModal" md-modal md-modal.ref="modal">
+        <div class="modal-content">
+            <h4>${'app.import.result' | t}</h4>
+
+            <p class="bold">Bogført</p>
+            <div class="text-success" repeat.for="item of importResult.success">${item}</div>
+            <br />
+            <p class="bold">Forkert beløb</p>
+            <div class="text-warning" repeat.for="item of importResult.warning">${item}</div>
+            <br />
+            <p class="bold">Ikke bogført</p>
+            <div class="text-danger" repeat.for="item of importResult.notfound">${item}</div>
+        </div>
+        <div class="modal-footer">
+            <a md-button="flat: true;" md-waves="color: accent;" class="modal-action modal-close">${'app.ok' | t}</a>
+        </div>
+    </div>
 </template>

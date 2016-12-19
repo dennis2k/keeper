@@ -60,6 +60,7 @@ export class Subject {
     identifier: string;
     rooms: number;
     size: number;
+    transactionText: string;
     tenant?: string | TenantModel;
     monthlyExpenditure: number;
     monthlyRent: number;
@@ -71,6 +72,16 @@ export class Subject {
     payments: Map<string, PaymentModel> | undefined = new Map<string, PaymentModel>();
     //cacl
     m2Cost: number;
+
+    static compareTransactionText(text: string, otherText): boolean {
+        if (!text || !otherText) {
+            return false;
+        }
+        if (text.toLowerCase().trim() === otherText.toLowerCase().trim()) {
+            return true;
+        }
+        return false;
+    }
 }
 
 interface IDeposit {

@@ -11,6 +11,12 @@ export class Period {
         return parseInt(this.value.slice(-4),10);
     }
 
+    equals(period: Period): boolean {
+        if (this.month === period.month && this.year === period.year)
+            return true;
+        return false;
+    }
+
     static getNextPeriod(offset: number = 0): Period {
         let now = new Date();
         now.setMonth(now.getMonth() - offset);

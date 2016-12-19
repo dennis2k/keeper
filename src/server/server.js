@@ -1,7 +1,6 @@
 'use strict'
 const express = require('express')
 const bodyParser = require('body-parser')
-var path = require('path')
 const bluebird = require('bluebird')
 const methodOverride = require('method-override')
 const mongoose = require('mongoose')
@@ -25,12 +24,12 @@ app.use((req, res, next) => {
 mongoose.connect('mongodb://fiskepind:fiskepind1337@ds033986.mlab.com:33986/keeper-db')
 
 //Routes
-require('./import/import.routes')(app);   
 require("./routes")(app);
 require("./auth/auth.routes")(app);
 app.use(router)
 
+let port = 3000;
 //Launch
-app.listen(3000, () => {
-    console.log('Express server listening on port 3000')
+app.listen(port, () => {
+    console.log('Express server listening on port ' + port);
 })

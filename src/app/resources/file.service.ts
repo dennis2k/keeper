@@ -1,18 +1,19 @@
-export abstract class FileService {
+export class FileService {
 
-    csvToJson<T>(csv: string, withHeaders?: boolean = false): T {
+    csvToJson(csv: string, withHeaders: boolean = false): any {
         let lines = csv.split("\n");
         let result = [];
-        let headers = lines[0].split(",");
+        let headers = lines[0].split(";");
         let rowStartIndex = (withHeaders) ? 1 : 0;
-        for (let i = 1;i < lines.length;i++){
+        for (let i = rowStartIndex;i < lines.length;i++){
             let obj = {};
-            let currentline = lines[i].split(",");
-            for (let j = 0;j < headers.length;j++){
-                obj[headers[j]] = currentline[j];
+            let line = lines[i].replace(/"/g , "");
+            let currentline = line.split(";");
+            for (let j = 0;j < headers.length;j++) {
+                obj['key_' + j] = currentline[j];
             }
             result.push(obj);
         }
-        return JSON.stringify(result);
+        return result;
     }
 }
