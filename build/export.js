@@ -7,10 +7,14 @@ module.exports = {
     'config.js',
     'favicon.ico',
     'LICENSE',
+    'extensions.js',
     "jspm_packages/npm/bluebird@3.4.1/js/browser/bluebird.min.js", 
+    "jspm_packages/npm/materialize-css@0.97.8/dist/js/materialize.min.js", 
     'jspm_packages/system.js',
     'jspm_packages/system-polyfills.js',
     'jspm_packages/system-csp-production.js',
+    "jspm_packages/github/systemjs/**",
+    "locales/**",
     'styles/styles.css'
   ],
   // this section lists any jspm packages that have
@@ -33,6 +37,11 @@ module.exports = {
     ], [
       'bluebird', [
         '/js/browser/bluebird.min.js'
+      ]
+    ], [
+      'materialize-css', [
+        '/dist/js/materialize.min.js',
+        '/dist/fonts/*'
       ]
     ]
   ]

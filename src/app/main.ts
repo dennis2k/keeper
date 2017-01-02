@@ -13,7 +13,7 @@ export function configure(aurelia: Aurelia) {
             .developmentLogging()
 
             // Install and configure the plugins
-            .plugin('martingust/aurelia-repeat-strategies')
+            //.plugin('martingust/aurelia-repeat-strategies')
             .plugin('aurelia-materialize-bridge', bridge => bridge.useAll())
             .plugin('aurelia-animator-css')
             .plugin('aurelia-validation')
