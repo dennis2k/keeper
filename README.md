@@ -10,3 +10,13 @@ typings install
 cd src/server && npm install
 gulp
 ```
+
+Deploy
+```shell
+npm install
+jspm install
+typings install
+cd src/server && forever start server.js
+cd src/server && npm install
+gulp
+```

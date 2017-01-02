@@ -14,6 +14,6 @@ export abstract class UploadService {
     }
 
     upload<U>(url: string, form: FormData): Promise<U> {
-        return this.http.fetch(appConfig.baseUrl + url, { method: Method.POST, body : form});
+        return this.http.fetch(appConfig.baseUrl + url, { method: Method.POST, body : form}) as any;
     }
 }

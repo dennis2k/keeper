@@ -103,7 +103,7 @@ export abstract class ApiService<T extends Entity> {
 
     remove(id: string): Promise<Response> {
         let url = `${this.resource}/${id}`;
-        return this.request(url, Method.DELETE);
+        return this.request(url, Method.DELETE) as any;
     }
 
     request(url: string, method: string = Method.GET, entity?: T): Promise<T | T[]> {
@@ -139,7 +139,7 @@ export abstract class ApiService<T extends Entity> {
                         this.broadcastService.publish(BroadcastService.UNAUTHORIZED, text);
                     throw new Error(text);
                 });
-            });
+            }) as any;
     }
 
     protected getConfig(method: string = Method.GET, entity?: T): RequestInit {
