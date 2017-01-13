@@ -50,7 +50,7 @@ export class PaymentGrid {
 
     import(periodString: string) {
         let reader = new FileReader();
-        reader.onload =  ()  => {
+        reader.onload = () => {
             let rows = this.fileService.csvToJson(reader.result, true);
             this.importResult = this.autoCheckByBankStatement(periodString, rows);
             this.modal.open();
@@ -68,50 +68,62 @@ export class PaymentGrid {
             warning: [],
             notfound: []
         };
-        console.log(rows);
         this.assets.forEach(asset => {
             asset.subjects.forEach(subject => {
                 let subjectFound = false;
+                let amountMisMatches = [];
+                let amountMatched = false;
                 rows.forEach((row) => {
                     let rowTransactionText = row['key_2'];
                     let subjectMatchTransaction = Subject.compareTransactionText(subject.transactionText, rowTransactionText);
+                    // We've found a matching text
                     if (subjectMatchTransaction) {
                         subjectFound = true;
                         let rowAmount = row['key_4'];
-                        if (parseInt(rowAmount,10) === subject.monthlyTotal) {
+                        if (parseInt(rowAmount, 10) === subject.monthlyTotal) {
+                            amountMatched = true;
                             let payment = subject.payments.get(periodString);
                             if (payment) {
                                 payment.isPaid = true;
-                                subject.payments.set(periodString,payment);
+                                subject.payments.set(periodString, payment);
                                 this.paymentService.save(payment).then(() => this.signaler.signal('refresh'));
                             } else {
                                 this.createSinglePayment(asset._id, subject, periodString, true);
                             }
                             output.success.push(
-                                [asset.address,subject.identifier,"betaling",subject.monthlyTotal,"bogført"].join(" ")
+                                {
+                                    address: asset.address + " " + subject.identifier,
+                                    identifier: subject.transactionText,
+                                    monthlyTotal: subject.monthlyTotal
+                                }
                             );
                         } else {
-                            output.warning.push(
-                                [
-                                    asset.address,
-                                    subject.identifier,
-                                    "forventet betaling",
-                                    subject.monthlyTotal,
-                                    ", faktisk betaling",
-                                    rowAmount
-                                ].join(" ")
-                            );
+                            amountMisMatches.push(rowAmount);
                         }
                     }
                 });
                 if (!subjectFound) {
                     output.notfound.push(
-                        [asset.address,subject.identifier,"blev ikke bogført"].join(" ")
+                        {
+                            address: asset.address + " " + subject.identifier,
+                            identifier: subject.transactionText,
+                            monthlyTotal: subject.monthlyTotal
+                        }
+                    );
+                }
+                if (subjectFound && !amountMatched) {
+                    output.warning.push(
+                        {
+                            address: asset.address + " " + subject.identifier,
+                            identifier: subject.transactionText,
+                            monthlyTotal: subject.monthlyTotal,
+                            mismatches: amountMisMatches.join(", ")
+                        }
                     );
                 }
             });
         });
-        
+        console.log(output);
         return output;
     }
 

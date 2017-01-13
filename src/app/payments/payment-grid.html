@@ -89,14 +89,49 @@
         <div class="modal-content">
             <h4>${'app.import.result' | t}</h4>
 
-            <p class="bold">Bogført</p>
-            <div class="text-success" repeat.for="item of importResult.success">${item}</div>
+            <p class="bold">Bogført (${importResult.success.length})</p>
+            <table>
+                <tr>
+                    <th>Adresse</th>
+                    <th>Overførselstekst</th>
+                    <th>Husleje</th>
+                </tr>
+                <tr repeat.for="item of importResult.success" class="text-success">
+                    <td>${item.address}</td>
+                    <td>${item.identifier}</td>
+                    <td>${item.monthlyTotal}</td>
+                </tr>
+            </table>
             <br />
-            <p class="bold">Forkert beløb</p>
-            <div class="text-warning" repeat.for="item of importResult.warning">${item}</div>
+            <p class="bold">Forkert beløb (${importResult.warning.length})</p>
+            <table>
+                <tr>
+                    <th>Adresse</th>
+                    <th>Overførselstekst</th>
+                    <th>Husleje</th>
+                    <th>Kandidater</th>
+                </tr>
+                <tr repeat.for="item of importResult.warning" class="text-warning">
+                    <td>${item.address}</td>
+                    <td>${item.identifier}</td>
+                    <td>${item.monthlyTotal}</td>
+                    <td>${item.mismatches}</td>
+                </tr>
+            </table>
             <br />
-            <p class="bold">Ikke bogført</p>
-            <div class="text-danger" repeat.for="item of importResult.notfound">${item}</div>
+            <p class="bold">Ikke bogført (${importResult.notFound.length})</p>
+            <table>
+                <tr>
+                    <th>Adresse</th>
+                    <th>Overførselstekst</th>
+                    <th>Husleje</th>
+                </tr>
+                <tr repeat.for="item of importResult.notfound" class="text-danger">
+                    <td>${item.address}</td>
+                    <td>${item.identifier}</td>
+                    <td>${item.monthlyTotal}</td>
+                </tr>
+            </table>
         </div>
         <div class="modal-footer">
             <a md-button="flat: true;" md-waves="color: accent;" class="modal-action modal-close">${'app.ok' | t}</a>
