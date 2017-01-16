@@ -7,7 +7,7 @@
     "app.subjects": "Lejemål",
     "app.show.more": "Vis mere",
     "app.address": "Adresse",
-    "app.size": "Størrelse",
+    "app.size": "Størrelse", 
     "app.rooms": "Rum",
     "app.state": "Tilstand",
     "app.expenditure": "Forbrug",
@@ -16,9 +16,7 @@
     "app.save": "Gem",
     "app.cancel": "Annuller",
     "app.asset.details": "Detaljer",
-    "app.recuring.expenses": "Faste omkostninger",
     "app.month.short": "mdr",
-    "app.add.new.subject": "Tilføj nyt lejemål",
     "app.no.tenant": "Ingen lejer",
     "app.identifier": "Etage",
     "app.add.recuring.expense": "Tilføj fast omkostning",
@@ -38,5 +36,11 @@
     "app.interval.monthly": "Månedlig",
     "app.payment.overview": "Betalingsoversigt",
     "app.all.together": "Samlet",
-    "app.subject": "Lejemål"
+    "app.subject": "Lejemål",
+    "app.add.new.subject": "Tilføj nyt lejemål",
+    "app.recuring.expenses": "Faste omkostninger",
+    "app.transaction.text": "Transaktions tekst",
+    "app.monthly.income": "Månedlig indkomst",
+    "app.monthly.expense": "Månedlig udgift",
+    "app.monthly.profit": "Månedlig profit"
 }

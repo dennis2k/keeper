@@ -1,3 +1,4 @@
+import { Router } from 'aurelia-router';
 import { FileService } from '../resources/file.service';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { PaymentModel } from './payment.model';
@@ -23,6 +24,7 @@ export class PaymentGrid {
 
     constructor(
         private authService: AuthService,
+        private router: Router,
         private fileService: FileService,
         private paymentService: PaymentService,
         private assetService: AssetService,

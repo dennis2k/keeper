@@ -1,3 +1,6 @@
 {
-    "app.address": "Address"
+    "app.address": "Address",
+    "app.asset.details": "Details",
+    "app.add.new.subject": "Add new subject",
+    "app.recuring.expenses": "Hammer"
 }

@@ -16,7 +16,7 @@ export class Login {
         private router: Router,
         private toaster: Toaster,
         private storageService: StorageService,
-        private userService: UserService) { };
+        private userService: UserService) {};
 
     login(email: string, password: string) {
         return this.auth.login(email, password)

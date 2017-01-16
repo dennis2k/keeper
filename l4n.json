@@ -1,5 +1,5 @@
 {
-    "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0aW5hcm4rMUBnbWFpbC5jb20iLCJhZG1pbiI6dHJ1ZSwiY29udHJpYnV0b3IiOmZhbHNlLCJhY2NvdW50X2lkIjoiNTZmMTI1ZTZkODFkZGE5M2YzZGI5NTk2IiwidXNlcl9pZCI6IjU2ZjEyNWU2ZDgxZGRhOTNmM2RiOTU5NyIsImlhdCI6MTQ3NzQyMjg2NywiZXhwIjoxNDc4MDI3NjY3fQ.ccQICZQ9fDMiPOJOdnf7MIlKvb56nFxK4KkAAiZrEL4",
+    "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVfdGltZSI6MTQ4NDYwODMxNzIzNiwiYWRtaW4iOnRydWUsImFjY291bnRfaWQiOiI1NmYxMjVlNmQ4MWRkYTkzZjNkYjk1OTYiLCJpYXQiOjE0ODQ2MDgzMTcsImV4cCI6MjM0ODYwODMxN30.78eaBSzZ3CuQ3Zrb0JqhE6ZnL-65hXifl5NpbNOliog",
     "destination" : "./locales",
     "overwrite" : true,
     "format" : "json",
