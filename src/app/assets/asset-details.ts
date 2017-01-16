@@ -36,7 +36,7 @@ export class AssetDetails {
         }
         return this.tenantService.getAll().then(tenants => {
             this.tenants = tenants;
-            this.tenants.unshift({ id: undefined, name: "app.notes.tenant"} as any);
+            this.tenants.unshift({ id: undefined, name: "app.no.tenant"} as any);
         });
     }
 

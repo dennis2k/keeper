@@ -1,5 +1,4 @@
 import { FileService } from '../resources/file.service';
-import { Period } from '../resources/period';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { PaymentModel } from './payment.model';
 import { AssetModel, Subject } from '../assets/asset.model';

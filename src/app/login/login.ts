@@ -1,5 +1,6 @@
-import {UserService} from '../users/user.service';
+import { UserService } from '../users/user.service';
 import { Toaster } from '../resources/toaster';
+import { StorageService } from '../resources/storage.service';
 import { AuthService } from 'aurelia-auth';
 import { autoinject } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
@@ -14,16 +15,19 @@ export class Login {
         private auth: AuthService,
         private router: Router,
         private toaster: Toaster,
+        private storageService: StorageService,
         private userService: UserService) { };
 
     login(email: string, password: string) {
         return this.auth.login(email, password)
             .then(response => {
                 this.userService.setUserInStorage(response.user);
-                this.router.navigateToRoute('profile');
+                this.router.navigateToRoute('payment-grid');
             })
             .catch((err) => {
-                this.toaster.error("Wrong username / password");
+                console.log(err);
+                this.toaster.error("Forkert brugernavn eller kodeord");
+                this.storageService.clear();
             });
     };
 
@@ -31,10 +35,12 @@ export class Login {
         return this.auth.authenticate(name, true, true)
             .then((response) => {
                 this.userService.setUserInStorage(response.user);
-                this.router.navigateToRoute('profile');
+                this.router.navigateToRoute('payment-grid');
             })
             .catch((err) => {
-                this.toaster.error("Wrong username / password");
+                console.log(err);
+                this.toaster.error("Forkert brugernavn eller kodeord");
+                this.storageService.clear();
             });
     }
 }
